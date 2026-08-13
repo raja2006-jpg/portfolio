@@ -40,6 +40,7 @@ import {
 import * as THREE from 'three'
 
 import styles from './Lanyard.module.css'
+import { Vector2 } from 'three'
 
 extend({
   MeshLineGeometry,
@@ -50,7 +51,9 @@ extend({
 declare module '@react-three/fiber' {
   interface ThreeElements {
     meshLineGeometry: ThreeElement<typeof MeshLineGeometry>
-    meshLineMaterial: ThreeElement<typeof MeshLineMaterial>
+    meshLineMaterial: ThreeElement<typeof MeshLineMaterial> & {
+      useMap?: number
+    }
   }
 }
 
@@ -480,12 +483,15 @@ function Band({
       <mesh ref={band}>
         <meshLineGeometry />
         <meshLineMaterial
+          args={[{
+              resolution: new Vector2
+          }]}
           color="white"
           depthTest={false}
           transparent
           opacity={1}
           resolution={isMobile ? [800, 1200] : [1000, 1000]}
-          useMap
+          useMap={1}
           map={bandTexture}
           repeat={[-4, 1]}
           lineWidth={lanyardWidth}
