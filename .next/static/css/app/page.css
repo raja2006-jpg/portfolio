@@ -1,0 +1,200 @@
+/*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/components/sections/ProfileCard.css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************/
+.chroma-single-card {
+  width: 320px;
+
+  border-radius: 28px;
+
+  overflow: hidden;
+
+  position: relative;
+
+  background: linear-gradient(
+    145deg,
+    #182848,
+    #000000
+  );
+
+  border: 1px solid rgba(255,255,255,.1);
+
+  backdrop-filter: blur(20px);
+
+  cursor: pointer;
+
+  transition: all .45s ease;
+
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+}
+
+/* Spotlight */
+
+.chroma-single-card::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+  circle at var(--mouse-x) var(--mouse-y),
+  var(--spotlight-color),
+  transparent 70%
+);
+
+  opacity: 0;
+
+  transition: .4s ease;
+
+  z-index: 2;
+
+  pointer-events: none;
+}
+
+/* Glow Border */
+
+.chroma-single-card::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: inherit;
+
+  padding: 1px;
+
+  background: linear-gradient(
+    135deg,
+    #60a5fa,
+    #8b5cf6,
+    #06b6d4
+  );
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+
+  -webkit-mask-composite: xor;
+
+  opacity: 0;
+
+  transition: .4s ease;
+
+  pointer-events: none;
+}
+
+.chroma-single-card:hover {
+  transform: translateY(-10px);
+
+  box-shadow:
+    0 0 40px rgba(96,165,250,.3),
+    0 0 80px rgba(139,92,246,.15);
+}
+
+.chroma-single-card:hover::before {
+  opacity: 1;
+}
+
+.chroma-single-card:hover::after {
+  opacity: 1;
+}
+
+/* IMAGE */
+
+.chroma-image-wrapper {
+  padding: 12px;
+
+  position: relative;
+
+  z-index: 1;
+}
+
+.chroma-image {
+  width: 100%;
+
+  height: 360px;
+
+  object-fit: cover;
+
+  border-radius: 18px;
+
+  display: block;
+
+  transition: .5s ease;
+}
+
+.chroma-single-card:hover .chroma-image {
+  transform: scale(1.04);
+}
+
+/* CONTENT */
+
+.chroma-content {
+  padding: 24px;
+
+  position: relative;
+
+  z-index: 1;
+}
+
+.chroma-content h2 {
+  color: white;
+
+  font-size: 28px;
+
+  font-weight: 700;
+}
+
+.handle {
+  display: block;
+
+  color: #8b9cff;
+
+  margin-top: 4px;
+}
+
+.role {
+  color: rgba(255,255,255,.85);
+
+  margin-top: 10px;
+}
+
+.location {
+  color: rgba(255,255,255,.65);
+
+  margin-top: 10px;
+}
+
+/* BUTTONS */
+
+.socials {
+  display: flex;
+
+  gap: 12px;
+
+  margin-top: 20px;
+}
+
+.socials a {
+  text-decoration: none;
+
+  color: white;
+
+  padding: 10px 18px;
+
+  border-radius: 12px;
+
+  background: rgba(255,255,255,.08);
+
+  border: 1px solid rgba(255,255,255,.1);
+
+  transition: .3s ease;
+}
+
+.socials a:hover {
+  background: rgba(96,165,250,.25);
+
+  border-color: rgba(96,165,250,.5);
+
+  transform: translateY(-2px);
+}
