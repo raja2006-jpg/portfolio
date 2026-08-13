@@ -13,6 +13,7 @@ import {
   Canvas,
   extend,
   useFrame,
+  ThreeElement,
 } from '@react-three/fiber'
 
 import {
@@ -44,6 +45,14 @@ extend({
   MeshLineGeometry,
   MeshLineMaterial,
 })
+
+// Declare custom JSX elements for TypeScript
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    meshLineGeometry: ThreeElement<typeof MeshLineGeometry>
+    meshLineMaterial: ThreeElement<typeof MeshLineMaterial>
+  }
+}
 
 const CARD_MODEL = '/lanyard/card.glb'
 const DEFAULT_LANYARD = '/lanyard/lanyard.png'
@@ -216,7 +225,6 @@ function Band({
 
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
 
-    // Accept any image-like object and cast width/height safely
     const drawFitted = (source: any, rect: typeof FRONT_UV_RECT) => {
       if (!source || !source.width || !source.height) return
 
