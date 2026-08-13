@@ -216,8 +216,9 @@ function Band({
 
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
 
-    const drawFitted = (source: HTMLImageElement, rect: typeof FRONT_UV_RECT) => {
-      if (!source) return
+    // Accept any image-like object and cast width/height safely
+    const drawFitted = (source: any, rect: typeof FRONT_UV_RECT) => {
+      if (!source || !source.width || !source.height) return
 
       const x = rect.x * canvas.width
       const y = rect.y * canvas.height
