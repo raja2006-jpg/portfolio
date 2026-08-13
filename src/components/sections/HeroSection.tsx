@@ -19,24 +19,10 @@ import {
   Linkedin,
 } from 'lucide-react'
 import { personal, social } from '@/lib/data'
-
-type LanyardProps = {
-  position?: [number, number, number]
-  gravity?: [number, number, number]
-  fov?: number
-  transparent?: boolean
-  frontImage?: string | null
-  backImage?: string | null
-  imageFit?: 'cover' | 'contain'
-  lanyardImage?: string | null
-  lanyardWidth?: number
-}
+import type { LanyardProps } from './Lanyard'
 
 const Lanyard = dynamic<LanyardProps>(
-  () =>
-    import('./Lanyard').then(
-      (module) => module.default,
-    ),
+  () => import('./Lanyard').then((module) => module.default),
   {
     ssr: false,
     loading: () => (
@@ -72,11 +58,7 @@ const MAX_CARDS = 5
 const CARD_LIFETIME = 3000
 const SPAWN_THROTTLE = 160
 
-function FloatingCard({
-  card,
-}: {
-  card: PhotoCard
-}) {
+function FloatingCard({ card }: { card: PhotoCard }) {
   return (
     <motion.div
       initial={{
@@ -136,15 +118,12 @@ function FloatingCard({
           height: 192,
           borderRadius: 20,
           overflow: 'hidden',
-          border:
-            '1px solid rgba(0,0,0,0.06)',
+          border: '1px solid rgba(0,0,0,0.06)',
           boxShadow:
             '0 12px 48px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.04)',
-          background:
-            'rgba(255,255,255,0.8)',
+          background: 'rgba(255,255,255,0.8)',
           backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter:
-            'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           position: 'relative',
         }}
       >
@@ -204,9 +183,7 @@ function GlowBlob({
         height: size,
         borderRadius: '50%',
         background: color,
-        filter: `blur(${Math.round(
-          size * 0.5,
-        )}px)`,
+        filter: `blur(${Math.round(size * 0.5)}px)`,
         pointerEvents: 'none',
         ...style,
       }}
@@ -215,148 +192,78 @@ function GlowBlob({
 }
 
 export default function HeroSection() {
-  const sectionRef =
-    useRef<HTMLElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const [cards, setCards] = useState<PhotoCard[]>([])
 
-  const [cards, setCards] =
-    useState<PhotoCard[]>([])
+  const cardIdRef = useRef(0)
+  const lastSpawnRef = useRef(0)
+  const imgIndexRef = useRef(0)
 
-  const cardIdRef =
-    useRef(0)
+  const spawnCard = useCallback((clientX: number, clientY: number) => {
+    const now = Date.now()
 
-  const lastSpawnRef =
-    useRef(0)
-
-  const imgIndexRef =
-    useRef(0)
-
-  const spawnCard = useCallback(
-    (
-      clientX: number,
-      clientY: number,
-    ) => {
-      const now = Date.now()
-
-      if (
-        now -
-          lastSpawnRef.current <
-        SPAWN_THROTTLE
-      ) {
-        return
-      }
-
-      lastSpawnRef.current = now
-
-      const section =
-        sectionRef.current
-
-      if (!section) {
-        return
-      }
-
-      const rect =
-        section.getBoundingClientRect()
-
-      const id =
-        ++cardIdRef.current
-
-      const src =
-        HERO_IMAGES[
-          imgIndexRef.current %
-            HERO_IMAGES.length
-        ]
-
-      imgIndexRef.current += 1
-
-      const newCard: PhotoCard = {
-        id,
-        x:
-          clientX -
-          rect.left,
-        y:
-          clientY -
-          rect.top,
-        src,
-        rotation:
-          (Math.random() - 0.5) * 20,
-      }
-
-      setCards((prev) => {
-        const next = [
-          ...prev,
-          newCard,
-        ]
-
-        return next.length >
-          MAX_CARDS
-          ? next.slice(
-              next.length -
-                MAX_CARDS,
-            )
-          : next
-      })
-
-      window.setTimeout(() => {
-        setCards((prev) =>
-          prev.filter(
-            (card) =>
-              card.id !== id,
-          ),
-        )
-      }, CARD_LIFETIME)
-    },
-    [],
-  )
-
-  useEffect(() => {
-    const section =
-      sectionRef.current
-
-    if (!section) {
+    if (now - lastSpawnRef.current < SPAWN_THROTTLE) {
       return
     }
 
-    const onMove = (
-      event: MouseEvent,
-    ) => {
-      const target =
-        event.target
+    lastSpawnRef.current = now
 
+    const section = sectionRef.current
+    if (!section) return
+
+    const rect = section.getBoundingClientRect()
+    const id = ++cardIdRef.current
+    const src = HERO_IMAGES[imgIndexRef.current % HERO_IMAGES.length]
+    imgIndexRef.current += 1
+
+    const newCard: PhotoCard = {
+      id,
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+      src,
+      rotation: (Math.random() - 0.5) * 20,
+    }
+
+    setCards((prev) => {
+      const next = [...prev, newCard]
+      return next.length > MAX_CARDS
+        ? next.slice(next.length - MAX_CARDS)
+        : next
+    })
+
+    window.setTimeout(() => {
+      setCards((prev) => prev.filter((card) => card.id !== id))
+    }, CARD_LIFETIME)
+  }, [])
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    const onMove = (event: MouseEvent) => {
+      const target = event.target
       if (
         target instanceof Element &&
-        target.closest(
-          '.hero-lanyard-stage',
-        )
+        target.closest('.hero-lanyard-stage')
       ) {
         return
       }
 
-      spawnCard(
-        event.clientX,
-        event.clientY,
-      )
+      spawnCard(event.clientX, event.clientY)
     }
 
-    section.addEventListener(
-      'mousemove',
-      onMove,
-    )
+    section.addEventListener('mousemove', onMove)
 
     return () => {
-      section.removeEventListener(
-        'mousemove',
-        onMove,
-      )
+      section.removeEventListener('mousemove', onMove)
     }
   }, [spawnCard])
 
   const goTo = (id: string) => {
-    document
-      .querySelector(id)
-      ?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
+    document.querySelector(id)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
   }
 
   const container = {
@@ -379,105 +286,55 @@ export default function HeroSection() {
       y: 0,
       transition: {
         duration: 0.7,
-        ease: [
-          0.22,
-          1,
-          0.36,
-          1,
-        ],
-      },
-    },
-  }
-
-  const fadeIn = {
-    hidden: {
-      opacity: 0,
-      scale: 0.98,
-    },
-    show: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.8,
-        ease: [
-          0.22,
-          1,
-          0.36,
-          1,
-        ],
+        ease: [0.22, 1, 0.36, 1],
       },
     },
   }
 
   return (
-    <section
-      id="hero"
-      ref={sectionRef}
-      className="hero-section"
-    >
-      <div
-        aria-hidden="true"
-        className="hero-vignette"
-      />
+    <section id="hero" ref={sectionRef} className="hero-section">
+      <div aria-hidden="true" className="hero-vignette" />
 
-      <div
-        aria-hidden="true"
-        className="hero-ambient"
-      >
+      <div aria-hidden="true" className="hero-ambient">
         <GlowBlob
           color="rgba(100,150,255,0.15)"
           size={850}
-          style={{
-            top: '-10%',
-            left: '-8%',
-          }}
+          style={{ top: '-10%', left: '-8%' }}
         />
-
         <GlowBlob
           color="rgba(255,255,255,0.4)"
           size={780}
-          style={{
-            top: '5%',
-            right: '-12%',
-          }}
+          style={{ top: '5%', right: '-12%' }}
           delay={2.5}
         />
-
         <GlowBlob
           color="rgba(100,150,255,0.12)"
           size={700}
-          style={{
-            bottom: '-15%',
-            left: '30%',
-          }}
+          style={{ bottom: '-15%', left: '30%' }}
           delay={4}
         />
-
         <div className="hero-dot-grid" />
       </div>
 
       <AnimatePresence>
         {cards.map((card) => (
-          <FloatingCard
-            key={card.id}
-            card={card}
-          />
+          <FloatingCard key={card.id} card={card} />
         ))}
       </AnimatePresence>
 
       {/* LANYARD */}
       <div className="hero-lanyard-stage">
-  <Lanyard
-  position={[0, 0, 30]}
-  gravity={[0, -60, 0]}
-  fov={19}
-  transparent
-  frontImage={personal.avatar}
-  backImage={personal.avatar}
-  imageFit="cover"
-  lanyardWidth={1}
-/>
-</div>
+        <Lanyard
+          position={[0, 0, 30]}
+          gravity={[0, -60, 0]}
+          fov={19}
+          transparent
+          frontImage={personal.avatar}
+          backImage={personal.avatar}
+          imageFit="cover"
+          lanyardWidth={1}
+        />
+      </div>
 
       {/* CONTENT */}
       <div className="hero-content-wrap">
@@ -487,138 +344,74 @@ export default function HeroSection() {
           animate="show"
           className="hero-content"
         >
-          <motion.div
-            variants={fadeUp}
-            className="availability-wrap"
-          >
-            <span className="availability">
-              Available for work
-            </span>
+          <motion.div variants={fadeUp} className="availability-wrap">
+            <span className="availability">Available for work</span>
           </motion.div>
 
-          <motion.p
-            variants={fadeUp}
-            className="hero-intro"
-          >
+          <motion.p variants={fadeUp} className="hero-intro">
             Hi, I&apos;m
           </motion.p>
 
-          <motion.h1
-            variants={fadeUp}
-            className="hero-name"
-          >
+          <motion.h1 variants={fadeUp} className="hero-name">
             {personal.name}
           </motion.h1>
 
-          <motion.p
-            variants={fadeUp}
-            className="hero-role"
-          >
-            FULL STACK DEVELOPER &amp;
-            AI BUILDER
+          <motion.p variants={fadeUp} className="hero-role">
+            FULL STACK DEVELOPER &amp; AI BUILDER
           </motion.p>
 
-          <motion.p
-            variants={fadeUp}
-            className="hero-bio"
-          >
-            Building modern web
-            applications with precision,
-            performance, and a touch of
-            pixel-perfect design.
+          <motion.p variants={fadeUp} className="hero-bio">
+            Building modern web applications with precision, performance, and a
+            touch of pixel-perfect design.
           </motion.p>
 
-          <motion.div
-            variants={fadeUp}
-            className="hero-cta"
-          >
-            <PrimaryBtn
-              label="Get to Know Me"
-              onClick={() =>
-                goTo('#about')
-              }
-            />
-
-            <SecondaryBtn
-              label="View My Work"
-              onClick={() =>
-                goTo('#projects')
-              }
-            />
+          <motion.div variants={fadeUp} className="hero-cta">
+            <PrimaryBtn label="Get to Know Me" onClick={() => goTo('#about')} />
+            <SecondaryBtn label="View My Work" onClick={() => goTo('#projects')} />
           </motion.div>
 
-          <motion.div
-            variants={fadeUp}
-            className="hero-pill-wrap"
-          >
+          <motion.div variants={fadeUp} className="hero-pill-wrap">
             <div className="hero-pill">
               <PillItem
-                icon={
-                  <FileText size={28} />
-                }
+                icon={<FileText size={28} />}
                 label="Resume"
-                href={
-                  personal.resumeUrl
-                }
+                href={personal.resumeUrl}
                 borderRight
               />
-
               <PillItem
-                icon={
-                  <Code2 size={28} />
-                }
+                icon={<Code2 size={28} />}
                 label="Skills"
-                onClick={() =>
-                  goTo('#skills')
-                }
+                onClick={() => goTo('#skills')}
                 borderRight
               />
-
               <PillItem
-                icon={
-                  <BriefcaseBusiness
-                    size={28}
-                  />
-                }
+                icon={<BriefcaseBusiness size={28} />}
                 label="Work"
-                onClick={() =>
-                  goTo('#projects')
-                }
+                onClick={() => goTo('#projects')}
               />
             </div>
           </motion.div>
 
           <div className="mobile-socials">
             <SocialIcon
-              href={
-                social.linkedin ||
-                'https://linkedin.com'
-              }
+              href={social.linkedin || 'https://linkedin.com'}
               label="LinkedIn"
               color="#0077b5"
-              icon={
-                <Linkedin size={20} />
-              }
+              icon={<Linkedin size={20} />}
               size={48}
             />
-
             <SocialIcon
               href={social.github}
               label="GitHub"
               color="#000000"
-              icon={
-                <Github size={20} />
-              }
+              icon={<Github size={20} />}
               size={48}
             />
-
             <SocialIcon
               href="https://instagram.com"
               label="Instagram"
               color="#e1306c"
-              icon={
-                <Instagram size={20} />
-              }
+              icon={<Instagram size={20} />}
               size={48}
             />
           </div>
@@ -626,56 +419,33 @@ export default function HeroSection() {
       </div>
 
       <motion.div
-        initial={{
-          opacity: 0,
-          x: -20,
-        }}
-        animate={{
-          opacity: 1,
-          x: 0,
-        }}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
         transition={{
           delay: 1,
           duration: 0.7,
-          ease: [
-            0.22,
-            1,
-            0.36,
-            1,
-          ],
+          ease: [0.22, 1, 0.36, 1],
         }}
         className="social-sidebar"
       >
         <SocialIcon
-          href={
-            social.linkedin ||
-            'https://linkedin.com'
-          }
+          href={social.linkedin || 'https://linkedin.com'}
           label="LinkedIn"
           color="#0a66c2"
-          icon={
-            <Linkedin size={20} />
-          }
+          icon={<Linkedin size={20} />}
         />
-
         <SocialIcon
           href={social.github}
           label="GitHub"
           color="#000000"
-          icon={
-            <Github size={20} />
-          }
+          icon={<Github size={20} />}
         />
-
         <SocialIcon
           href="https://instagram.com"
           label="Instagram"
           color="#e1306c"
-          icon={
-            <Instagram size={20} />
-          }
+          icon={<Instagram size={20} />}
         />
-
         <div className="social-line" />
       </motion.div>
 
@@ -693,8 +463,7 @@ export default function HeroSection() {
           inset: 0;
           z-index: 0;
           pointer-events: none;
-          box-shadow:
-            inset 0 0 160px rgba(100,160,250,0.18);
+          box-shadow: inset 0 0 160px rgba(100,160,250,0.18);
         }
 
         .hero-ambient {
@@ -708,11 +477,7 @@ export default function HeroSection() {
         .hero-dot-grid {
           position: absolute;
           inset: 0;
-          background-image:
-            radial-gradient(
-              rgba(0,0,0,0.015) 1px,
-              transparent 1px
-            );
+          background-image: radial-gradient(rgba(0,0,0,0.015) 1px, transparent 1px);
           background-size: 30px 30px;
         }
 
@@ -722,11 +487,8 @@ export default function HeroSection() {
           right: 0;
           width: 58%;
           height: 100vh;
-
           z-index: 10;
-
           pointer-events: auto;
-
           background: transparent !important;
         }
 
@@ -739,7 +501,6 @@ export default function HeroSection() {
         .hero-lanyard-stage canvas {
           width: 100% !important;
           height: 100% !important;
-
           background: transparent !important;
         }
 
@@ -871,12 +632,7 @@ export default function HeroSection() {
           width: 1px;
           height: 80px;
           margin-top: 4px;
-          background:
-            linear-gradient(
-              to bottom,
-              rgba(0,0,0,0.15),
-              transparent
-            );
+          background: linear-gradient(to bottom, rgba(0,0,0,0.15), transparent);
         }
 
         @media (min-width: 1280px) {
@@ -901,10 +657,7 @@ export default function HeroSection() {
 
           .hero-content-wrap {
             min-height: 100vh;
-            padding:
-              68vh
-              24px
-              48px;
+            padding: 68vh 24px 48px;
             justify-content: center;
           }
 
@@ -934,12 +687,7 @@ export default function HeroSection() {
           }
 
           .hero-name {
-            font-size:
-              clamp(
-                2.7rem,
-                12vw,
-                4rem
-              );
+            font-size: clamp(2.7rem, 12vw, 4rem);
             text-align: center;
           }
 
@@ -982,29 +730,16 @@ function PrimaryBtn({
       type="button"
       onClick={onClick}
       onMouseEnter={(event) => {
-        const el =
-          event.currentTarget
-
-        el.style.background =
-          '#2e7d32'
-
-        el.style.transform =
-          'translateY(-2px)'
-
-        el.style.boxShadow =
-          '0 6px 20px rgba(56,142,60,0.4)'
+        const el = event.currentTarget
+        el.style.background = '#2e7d32'
+        el.style.transform = 'translateY(-2px)'
+        el.style.boxShadow = '0 6px 20px rgba(56,142,60,0.4)'
       }}
       onMouseLeave={(event) => {
-        const el =
-          event.currentTarget
-
-        el.style.background =
-          '#388e3c'
-
+        const el = event.currentTarget
+        el.style.background = '#388e3c'
         el.style.transform = ''
-
-        el.style.boxShadow =
-          '0 4px 14px rgba(56,142,60,0.3)'
+        el.style.boxShadow = '0 4px 14px rgba(56,142,60,0.3)'
       }}
       style={{
         display: 'inline-flex',
@@ -1018,10 +753,8 @@ function PrimaryBtn({
         fontSize: '1rem',
         fontWeight: 700,
         cursor: 'pointer',
-        boxShadow:
-          '0 4px 14px rgba(56,142,60,0.3)',
-        transition:
-          'all 0.2s ease',
+        boxShadow: '0 4px 14px rgba(56,142,60,0.3)',
+        transition: 'all 0.2s ease',
       }}
     >
       {label}
@@ -1046,33 +779,23 @@ function SecondaryBtn({
         gap: '0.4rem',
         padding: '1rem 2rem',
         borderRadius: 16,
-        border:
-          '1px solid rgba(0,0,0,0.08)',
-        background:
-          'rgba(255,255,255,0.4)',
+        border: '1px solid rgba(0,0,0,0.08)',
+        background: 'rgba(255,255,255,0.4)',
         color: '#1f2937',
         fontSize: '1rem',
         fontWeight: 700,
         cursor: 'pointer',
         backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter:
-          'blur(12px)',
-        transition:
-          'all 0.2s ease',
+        WebkitBackdropFilter: 'blur(12px)',
+        transition: 'all 0.2s ease',
       }}
       onMouseEnter={(event) => {
-        event.currentTarget.style.background =
-          'rgba(255,255,255,0.7)'
-
-        event.currentTarget.style.transform =
-          'translateY(-2px)'
+        event.currentTarget.style.background = 'rgba(255,255,255,0.7)'
+        event.currentTarget.style.transform = 'translateY(-2px)'
       }}
       onMouseLeave={(event) => {
-        event.currentTarget.style.background =
-          'rgba(255,255,255,0.4)'
-
-        event.currentTarget.style.transform =
-          ''
+        event.currentTarget.style.background = 'rgba(255,255,255,0.4)'
+        event.currentTarget.style.transform = ''
       }}
     >
       {label}
@@ -1101,10 +824,7 @@ function PillItem({
     justifyContent: 'center',
     gap: '0.25rem',
     padding: '0.75rem 0',
-    borderRight:
-      borderRight
-        ? '1px solid rgba(0,0,0,0.06)'
-        : undefined,
+    borderRight: borderRight ? '1px solid rgba(0,0,0,0.06)' : undefined,
     background: 'transparent',
     borderTop: 'none',
     borderBottom: 'none',
@@ -1113,41 +833,23 @@ function PillItem({
     fontSize: '0.875rem',
     fontWeight: 700,
     cursor: 'pointer',
-    transition:
-      'color 0.2s ease, background 0.2s ease',
+    transition: 'color 0.2s ease, background 0.2s ease',
     textDecoration: 'none',
   }
 
-  const hoverIn = (
-    event: React.MouseEvent<HTMLElement>,
-  ) => {
-    event.currentTarget.style.color =
-      '#2e7d32'
-
-    event.currentTarget.style.background =
-      'rgba(255,255,255,0.4)'
+  const hoverIn = (event: React.MouseEvent<HTMLElement>) => {
+    event.currentTarget.style.color = '#2e7d32'
+    event.currentTarget.style.background = 'rgba(255,255,255,0.4)'
   }
 
-  const hoverOut = (
-    event: React.MouseEvent<HTMLElement>,
-  ) => {
-    event.currentTarget.style.color =
-      '#374151'
-
-    event.currentTarget.style.background =
-      'transparent'
+  const hoverOut = (event: React.MouseEvent<HTMLElement>) => {
+    event.currentTarget.style.color = '#374151'
+    event.currentTarget.style.background = 'transparent'
   }
 
   const content = (
     <>
-      <span
-        style={{
-          color: '#2e7d32',
-        }}
-      >
-        {icon}
-      </span>
-
+      <span style={{ color: '#2e7d32' }}>{icon}</span>
       {label}
     </>
   )
@@ -1198,23 +900,14 @@ function SocialIcon({
       rel="noreferrer"
       aria-label={label}
       onMouseEnter={(event) => {
-        const el =
-          event.currentTarget
-
-        el.style.transform =
-          'translateX(4px) scale(1.1)'
-
-        el.style.boxShadow =
-          `0 6px 20px ${color}66`
+        const el = event.currentTarget
+        el.style.transform = 'translateX(4px) scale(1.1)'
+        el.style.boxShadow = `0 6px 20px ${color}66`
       }}
       onMouseLeave={(event) => {
-        const el =
-          event.currentTarget
-
+        const el = event.currentTarget
         el.style.transform = ''
-
-        el.style.boxShadow =
-          `0 4px 14px ${color}33`
+        el.style.boxShadow = `0 4px 14px ${color}33`
       }}
       style={{
         display: 'grid',
@@ -1224,11 +917,9 @@ function SocialIcon({
         borderRadius: '50%',
         background: color,
         color: '#fff',
-        boxShadow:
-          `0 4px 14px ${color}33`,
+        boxShadow: `0 4px 14px ${color}33`,
         textDecoration: 'none',
-        transition:
-          'all 0.25s cubic-bezier(0.22,1,0.36,1)',
+        transition: 'all 0.25s cubic-bezier(0.22,1,0.36,1)',
       }}
     >
       {icon}

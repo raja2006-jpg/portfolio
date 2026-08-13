@@ -190,7 +190,7 @@
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("ec654ad307103627")
+/******/ 		__webpack_require__.h = () => ("519c5c0847aa2159")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
@@ -797,7 +797,7 @@
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.miniCss = (chunkId, promises) => {
-/******/ 			var cssChunks = {"_app-pages-browser_src_components_sections_Lanyard_jsx":1};
+/******/ 			var cssChunks = {"_app-pages-browser_src_components_sections_Lanyard_tsx":1};
 /******/ 			if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 			else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 				promises.push(installedCssChunks[chunkId] = loadStylesheet(chunkId).then(() => {

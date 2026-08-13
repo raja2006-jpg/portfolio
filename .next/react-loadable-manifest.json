@@ -20,8 +20,8 @@
   "components\\sections\\HeroSection.tsx -> ./Lanyard": {
     "id": "components\\sections\\HeroSection.tsx -> ./Lanyard",
     "files": [
-      "static/css/_app-pages-browser_src_components_sections_Lanyard_jsx.css",
-      "static/chunks/_app-pages-browser_src_components_sections_Lanyard_jsx.js"
+      "static/css/_app-pages-browser_src_components_sections_Lanyard_tsx.css",
+      "static/chunks/_app-pages-browser_src_components_sections_Lanyard_tsx.js"
     ]
   }
 }
