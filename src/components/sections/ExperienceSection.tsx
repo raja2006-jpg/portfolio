@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { BookOpen, BriefcaseBusiness, GraduationCap } from 'lucide-react'
 import { education, experience } from '@/lib/data'
+import ScrollStack, { ScrollStackItem } from '../shared/ScrollStack'
 
 const timeline = [
   ...experience.map((item) => ({ ...item, icon: BriefcaseBusiness })),
@@ -18,42 +19,48 @@ export default function ExperienceSection() {
           <h2 className="mt-6 font-display text-5xl leading-[.9] tracking-[-.05em] text-[#171717] sm:text-7xl">Education <span className="text-[#49b34e]">&amp;</span> focus</h2>
         </motion.div>
 
-        {/* Mobile view - simple card layout with animations */}
-        <div className="md:hidden space-y-4">
-          {timeline.map((entry, index) => {
-            const Icon = entry.icon
-            return (
-              <motion.article
-                key={`${entry.title}-${entry.period}`}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="rounded-2xl border border-white bg-white/70 p-5 shadow-[0_20px_45px_rgba(21,45,38,.06)] backdrop-blur"
-              >
-                <div className="flex items-start justify-between gap-3 mb-4">
-                  <span className="inline-flex rounded-lg bg-[#49b34e] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-white shadow-lg shadow-[#49b34e]/20">
-                    {entry.period}
-                  </span>
-                  <span className="grid size-9 place-items-center rounded-xl border border-[#49b34e]/15 bg-[#4caf50]/10 text-[#388e3c] shadow-sm shrink-0">
-                    <Icon size={16} />
-                  </span>
-                </div>
-
-                <h3 className="text-lg font-black tracking-[-.045em] text-[#1c1c1c]">{entry.title}</h3>
-                <p className="mt-2 font-bold text-[#359640] text-sm">{entry.organisation}</p>
-                <p className="mt-3 text-xs font-medium leading-relaxed text-[#526473]">{entry.description}</p>
-
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {entry.tags.map((tag) => (
-                    <span key={tag} className="rounded-full bg-[#4caf50]/10 px-2 py-1 text-[9px] font-bold text-[#388e3c]">
-                      {tag}
+        {/* Mobile view - ScrollStack animation */}
+        <div className="md:hidden">
+          <ScrollStack
+            className="education-scroll-stack"
+            itemDistance={100}
+            itemScale={0.03}
+            itemStackDistance={30}
+            stackPosition="20%"
+            scaleEndPosition="10%"
+            baseScale={0.85}
+            rotationAmount={0}
+            blurAmount={0}
+            useWindowScroll={true}
+          >
+            {timeline.map((entry) => {
+              const Icon = entry.icon
+              return (
+                <ScrollStackItem key={`${entry.title}-${entry.period}`} itemClassName="education-stack-item">
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <span className="inline-flex rounded-lg bg-[#49b34e] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-white shadow-lg shadow-[#49b34e]/20">
+                      {entry.period}
                     </span>
-                  ))}
-                </div>
-              </motion.article>
-            )
-          })}
+                    <span className="grid size-9 place-items-center rounded-xl border border-[#49b34e]/15 bg-[#4caf50]/10 text-[#388e3c] shadow-sm shrink-0">
+                      <Icon size={16} />
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg font-black tracking-[-.045em] text-[#1c1c1c]">{entry.title}</h3>
+                  <p className="mt-2 font-bold text-[#359640] text-sm">{entry.organisation}</p>
+                  <p className="mt-3 text-xs font-medium leading-relaxed text-[#526473]">{entry.description}</p>
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {entry.tags.map((tag) => (
+                      <span key={tag} className="rounded-full bg-[#4caf50]/10 px-2 py-1 text-[9px] font-bold text-[#388e3c]">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </ScrollStackItem>
+              )
+            })}
+          </ScrollStack>
         </div>
 
         {/* Desktop view - alternating timeline layout */}
@@ -84,3 +91,16 @@ export default function ExperienceSection() {
     </section>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
