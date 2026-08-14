@@ -1,15 +1,8 @@
 'use client'
 
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-} from 'react'
-import Image from 'next/image'
+import { useRef, type CSSProperties } from 'react'
 import dynamic from 'next/dynamic'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   BriefcaseBusiness,
   Code2,
@@ -19,6 +12,7 @@ import {
   Linkedin,
 } from 'lucide-react'
 import { personal, social } from '@/lib/data'
+import ImageTrail from './ImageTrail'
 import type { LanyardProps } from './Lanyard'
 
 const Lanyard = dynamic<LanyardProps>(
@@ -38,120 +32,13 @@ const Lanyard = dynamic<LanyardProps>(
   },
 )
 
-interface PhotoCard {
-  id: number
-  x: number
-  y: number
-  src: string
-  rotation: number
-}
-
-const HERO_IMAGES = [
+const HERO_TRAIL_IMAGES = [
   '/hero-card-1.png',
   '/hero-card-2.png',
   '/hero-card-3.png',
   '/hero-card-4.png',
   '/hero-card-5.png',
 ]
-
-const MAX_CARDS = 5
-const CARD_LIFETIME = 3000
-const SPAWN_THROTTLE = 160
-
-function FloatingCard({ card }: { card: PhotoCard }) {
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        scale: 0.55,
-        filter: 'blur(14px)',
-        y: 20,
-      }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        filter: 'blur(0px)',
-        y: [0, -10, 0],
-      }}
-      exit={{
-        opacity: 0,
-        scale: 0.7,
-        filter: 'blur(10px)',
-        y: -18,
-        transition: {
-          duration: 0.45,
-          ease: [0.22, 1, 0.36, 1],
-        },
-      }}
-      transition={{
-        opacity: {
-          duration: 0.38,
-        },
-        scale: {
-          duration: 0.5,
-          ease: [0.22, 1, 0.36, 1],
-        },
-        filter: {
-          duration: 0.5,
-        },
-        y: {
-          repeat: Infinity,
-          duration: 2.6,
-          ease: 'easeInOut',
-          delay: 0.5,
-        },
-      }}
-      style={{
-        position: 'absolute',
-        left: card.x,
-        top: card.y,
-        translateX: '-50%',
-        translateY: '-50%',
-        rotate: card.rotation,
-        zIndex: 6,
-        pointerEvents: 'none',
-      }}
-    >
-      <div
-        style={{
-          width: 192,
-          height: 192,
-          borderRadius: 20,
-          overflow: 'hidden',
-          border: '1px solid rgba(0,0,0,0.06)',
-          boxShadow:
-            '0 12px 48px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.04)',
-          background: 'rgba(255,255,255,0.8)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          position: 'relative',
-        }}
-      >
-        <Image
-          src={card.src}
-          alt=""
-          fill
-          sizes="192px"
-          style={{
-            objectFit: 'cover',
-            objectPosition: 'center',
-            filter: 'brightness(1.05)',
-          }}
-        />
-
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background:
-              'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 55%)',
-          }}
-        />
-      </div>
-    </motion.div>
-  )
-}
 
 function GlowBlob({
   color,
@@ -193,71 +80,6 @@ function GlowBlob({
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
-  const [cards, setCards] = useState<PhotoCard[]>([])
-
-  const cardIdRef = useRef(0)
-  const lastSpawnRef = useRef(0)
-  const imgIndexRef = useRef(0)
-
-  const spawnCard = useCallback((clientX: number, clientY: number) => {
-    const now = Date.now()
-
-    if (now - lastSpawnRef.current < SPAWN_THROTTLE) {
-      return
-    }
-
-    lastSpawnRef.current = now
-
-    const section = sectionRef.current
-    if (!section) return
-
-    const rect = section.getBoundingClientRect()
-    const id = ++cardIdRef.current
-    const src = HERO_IMAGES[imgIndexRef.current % HERO_IMAGES.length]
-    imgIndexRef.current += 1
-
-    const newCard: PhotoCard = {
-      id,
-      x: clientX - rect.left,
-      y: clientY - rect.top,
-      src,
-      rotation: (Math.random() - 0.5) * 20,
-    }
-
-    setCards((prev) => {
-      const next = [...prev, newCard]
-      return next.length > MAX_CARDS
-        ? next.slice(next.length - MAX_CARDS)
-        : next
-    })
-
-    window.setTimeout(() => {
-      setCards((prev) => prev.filter((card) => card.id !== id))
-    }, CARD_LIFETIME)
-  }, [])
-
-  useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
-
-    const onMove = (event: MouseEvent) => {
-      const target = event.target
-      if (
-        target instanceof Element &&
-        target.closest('.hero-lanyard-stage')
-      ) {
-        return
-      }
-
-      spawnCard(event.clientX, event.clientY)
-    }
-
-    section.addEventListener('mousemove', onMove)
-
-    return () => {
-      section.removeEventListener('mousemove', onMove)
-    }
-  }, [spawnCard])
 
   const goTo = (id: string) => {
     document.querySelector(id)?.scrollIntoView({
@@ -316,11 +138,9 @@ export default function HeroSection() {
         <div className="hero-dot-grid" />
       </div>
 
-      <AnimatePresence>
-        {cards.map((card) => (
-          <FloatingCard key={card.id} card={card} />
-        ))}
-      </AnimatePresence>
+      <div className="hero-trail-overlay" aria-hidden="true">
+        <ImageTrail items={HERO_TRAIL_IMAGES} variant={1} triggerRef={sectionRef} />
+      </div>
 
       {/* LANYARD */}
       <div className="hero-lanyard-stage">
@@ -479,6 +299,23 @@ export default function HeroSection() {
           inset: 0;
           background-image: radial-gradient(rgba(0,0,0,0.015) 1px, transparent 1px);
           background-size: 30px 30px;
+        }
+
+        .hero-trail-overlay {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 9;
+          pointer-events: none;
+        }
+
+        .hero-trail-overlay .content {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
         }
 
         .hero-lanyard-stage {
@@ -650,6 +487,7 @@ export default function HeroSection() {
         }
 
         @media (max-width: 1023px) {
+          .hero-trail-overlay,
           .hero-lanyard-stage {
             width: 100%;
             height: 100vh;
