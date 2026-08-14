@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { seo, personal, social } from '@/lib/data'
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider'
-import CustomCursor from '@/components/shared/CustomCursor'
 import LoadingScreen from '@/components/shared/LoadingScreen'
 
 export const metadata: Metadata = {
@@ -99,7 +98,6 @@ export default function RootLayout({
       <body className="bg-[#101018] text-zinc-50 antialiased">
         <SmoothScrollProvider>
           <LoadingScreen />
-          <CustomCursor />
           {/* Noise texture overlay */}
           <div className="noise-overlay" aria-hidden="true" />
           <div className="relative z-10 w-full">

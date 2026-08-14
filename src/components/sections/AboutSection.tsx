@@ -4,19 +4,20 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import { personal, stats } from '@/lib/data'
+import BorderGlow from '@/components/shared/BorderGlow'
 
 export default function AboutSection() {
   return (
     <section
       id="about"
-      className="relative overflow-hidden bg-[#101018] px-6 py-24 text-white sm:py-32"
+      className="relative overflow-hidden  px-6 py-24 text-white sm:py-32"
     >
       {/* Background Marquee */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 flex items-center overflow-hidden select-none"
       >
-        <div className="marquee-track flex whitespace-nowrap font-display text-[23vw] tracking-[-.04em] text-white/[.025]">
+        <div className="marquee-track flex whitespace-nowrap font-display text-[23vw] tracking-[-.04em] text-white/[.095]">
           <span>ABOUT · ABOUT · ABOUT · ABOUT · </span>
           <span>ABOUT · ABOUT · ABOUT · ABOUT · </span>
         </div>
@@ -31,7 +32,7 @@ export default function AboutSection() {
           transition={{ duration: 0.65 }}
           className="mx-auto mb-12 max-w-2xl text-center"
         >
-          <span className="section-kicker border border-blue-400/20 bg-blue-400/10 text-blue-300">
+          <span className="section-kicker border border-lime-200/20  text-lime-200">
             About me
           </span>
 
@@ -51,10 +52,10 @@ export default function AboutSection() {
             className="relative mx-auto w-full max-w-sm"
           >
             {/* Glow */}
-            <div className="absolute -inset-8 rounded-full bg-blue-500/15 blur-3xl" />
+            <div className="absolute -inset-8 rounded-full bg-green-100/15 blur-3xl" />
 
             {/* Card */}
-            <div className="group relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-white/10 bg-[#191923] shadow-2xl shadow-black/30">
+            <div className="group relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-white/10  shadow-2xl shadow-black/100">
 
               {/* Image */}
               <Image
@@ -72,7 +73,7 @@ export default function AboutSection() {
                   ease-out
                   group-hover:grayscale-0
                   group-hover:brightness-110
-                  group-hover:scale-105
+                  group-hover:scale-115
                 "
               />
 
@@ -125,7 +126,7 @@ export default function AboutSection() {
                 technical clarity
               </span>{' '}
               and{' '}
-              <span className="text-blue-300">
+              <span className="text-lime-200">
                 good visual judgement
               </span>
               —where a site is as easy to use as it is memorable.
@@ -149,7 +150,7 @@ export default function AboutSection() {
                     behavior: 'smooth',
                   })
               }}
-              className="mt-8 inline-flex items-center gap-2 text-sm font-black text-white transition hover:text-blue-300"
+              className="mt-8 inline-flex items-center gap-2 text-sm font-black text-white transition hover:text-lime-200"
             >
               Explore the work
               <ArrowUpRight size={16} />
@@ -158,24 +159,46 @@ export default function AboutSection() {
             {/* Stats */}
             <div className="mt-10 grid gap-3 sm:grid-cols-3">
               {stats.map((stat, index) => (
-                <div
+                <BorderGlow
                   key={stat.label}
-                  className="rounded-2xl border border-white/10 bg-white/[.035] p-4 backdrop-blur-sm transition hover:-translate-y-1 hover:bg-white/[.06]"
+                  backgroundColor="#0a0a0a"
+                  backgroundOpacity={0.2}
+                  fillOpacity={2.1}
+                  animated={true}
+                  coneSpread={1.5}
+                  borderRadius={16}
+                  glowRadius={35}
+                  glowIntensity={1.8}
+                  edgeSensitivity={6005}
+                  colors={
+                    index === 1
+                      ? ['#ff4d00','#08fcf4','#6600ff','#fffb00',, '#6ee7b7','#ff4d00','#08fcf4','#fffb00','#6600ff',]
+                      : ['#ff4d00','#08fcf4','#ff0000','#fffb00', '#93c5fd','#ff4d00','#08fcf4','#ffe600','#fffb00',, '#bfdbfe']
+                      
+                      
+                  }
+                  glowColor={
+                    index === 1
+                      ? '142 71 29'
+                      : '217 70 50'
+                  }
                 >
-                  <p
-                    className={
-                      index === 1
-                        ? 'font-display text-3xl text-emerald-300'
-                        : 'font-display text-3xl text-blue-300'
-                    }
-                  >
-                    {stat.value}
-                  </p>
+                  <div className="p-4">
+                    <p
+                      className={
+                        index === 1
+                          ? 'font-display text-3xl text-white-900'
+                          : 'font-display text-3xl text-white-900'
+                      }
+                    >
+                      {stat.value}
+                    </p>
 
-                  <p className="mt-1 text-[10px] font-bold uppercase tracking-[.12em] text-zinc-500">
-                    {stat.detail}
-                  </p>
-                </div>
+                    <p className="mt-1 text-[10px] font-bold uppercase tracking-[.202em] text-zinc-500">
+                      {stat.detail}
+                    </p>
+                  </div>
+                </BorderGlow>
               ))}
             </div>
           </motion.div>
