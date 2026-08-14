@@ -162,7 +162,6 @@ export default function AboutSection() {
                 <BorderGlow
                   key={stat.label}
                   backgroundColor="#0a0a0a"
-                  backgroundOpacity={0.2}
                   fillOpacity={2.1}
                   animated={true}
                   coneSpread={1.5}
@@ -172,10 +171,8 @@ export default function AboutSection() {
                   edgeSensitivity={6005}
                   colors={
                     index === 1
-                      ? ['#ff4d00','#08fcf4','#6600ff','#fffb00',, '#6ee7b7','#ff4d00','#08fcf4','#fffb00','#6600ff',]
-                      : ['#ff4d00','#08fcf4','#ff0000','#fffb00', '#93c5fd','#ff4d00','#08fcf4','#ffe600','#fffb00',, '#bfdbfe']
-                      
-                      
+                      ? ['#ff4d00', '#08fcf4', '#6600ff', '#fffb00', '#6ee7b7', '#ff4d00', '#08fcf4', '#fffb00', '#6600ff']
+                      : ['#ff4d00', '#08fcf4', '#ff0000', '#fffb00', '#00fd04', '#ff4d00', '#08fcf4', '#ffe600', '#fffb00', '#00fd04']
                   }
                   glowColor={
                     index === 1

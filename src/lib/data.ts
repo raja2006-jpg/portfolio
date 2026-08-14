@@ -48,7 +48,7 @@ export const projects = [
     name: 'Shalom Systems',
     type: 'Business website',
     description: 'A deployed business-focused web experience built around clear hierarchy, responsive layouts, and direct calls to action.',
-    tech: ['JavaScript', 'CSS', 'Vercel'],
+    tech: ['JavaScript','Express.js','MongoDB','Node', 'Vercel',],
     accent: 'violet',
     images: [
     '/projects/shalom-1.png',
@@ -64,7 +64,7 @@ export const projects = [
     name: 'NetBox',
     type: 'Web interface',
     description: 'A lightweight deployed interface that explores clean navigation, compact information blocks, and accessible responsive presentation.',
-    tech: ['HTML', 'CSS', 'JavaScript'],
+    tech: ['HTML', 'CSS', 'JavaScript','python', 'flask'],
     accent: 'cyan',
     images: [
     '/projects/netbox-1.png',
@@ -72,15 +72,15 @@ export const projects = [
     '/projects/netbox-3.png',
     '/projects/netbox-4.png',
   ],
-    liveUrl: 'https://netbox-gray.vercel.app',
+    liveUrl: 'https://netbox-72tq.onrender.com/',
     githubUrl: 'https://github.com/raja2006-jpg/NetBox',
   },
   {
     id: 'social-blog',
-    name: 'Social Blog Platform',
+    name: 'E-Commerce Website',
     type: 'Content platform',
-    description: 'A social publishing project that explores user-facing content flows, polished layouts, and a web product’s core interaction states.',
-    tech: ['JavaScript', 'HTML', 'CSS'],
+    description: 'Developed a modern e-commerce website using Next.js with responsive design, optimized performance, and SEO-friendly architecture to enhance user experience and search engine visibility.',
+    tech: ['TypeScript', 'Tailwind CSS', 'Next.js', 'Vercel'],
     accent: 'orange',
     images: [
     '/projects/social-blog-1.png',
@@ -88,7 +88,7 @@ export const projects = [
     '/projects/social-blog-3.png',
     '/projects/social-blog-4.png',
   ],
-    liveUrl: 'https://social-blog-platform.vercel.app',
+    liveUrl: 'https://mskmarketing.vercel.app/',
     githubUrl: 'https://github.com/raja2006-jpg/social-blog-platform',
   },
   {
@@ -111,27 +111,27 @@ export const projects = [
 
 export const experience = [
   {
-    period: '2025 — Present',
-    title: 'Independent developer',
+    period: '2026',
+    title: 'MERN-STACK Developer',
     organisation: 'Personal & collaborative projects',
     description: 'Building and deploying web projects while strengthening product thinking, frontend implementation, and practical development workflows.',
     tags: ['JavaScript', 'React', 'Deployment'],
   },
   {
-    period: '2023 — Present',
-    title: 'Computer Science student',
-    organisation: 'RVS Technical Campus',
-    description: 'Developing a foundation in software engineering alongside hands-on web projects and continuous technical exploration.',
-    tags: ['Computer Science', 'Problem solving', 'Web development'],
+    period: 'Sept 2025  — Mar 2026',
+    title: 'Web Development Intern',
+    organisation: 'TECH VEDHU',
+    description: 'Contributed to the development of a web application, focusing on frontend features, responsive design, and user experience enhancements.',
+    tags: ['JavaScript', 'React', 'Frontend Development','API Integration',],
   },
 ] as const
 
 export const education = [
   {
-    period: '2023 — Present',
+    period: '2023 — 2027',
     qualification: 'Bachelor of Engineering',
     subject: 'Computer Science & Engineering',
-    institution: 'RVS Technical Campus',
+    institution: 'RVS Institute of Technology',
     location: 'Coimbatore, Tamil Nadu',
   },
 ] as const

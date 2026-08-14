@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { personal, social } from '@/lib/data'
 import ImageTrail from './ImageTrail'
+import TiltedCard from '@/components/shared/TiltedCard'
 import type { LanyardProps } from './Lanyard'
 
 const Lanyard = dynamic<LanyardProps>(
@@ -153,6 +154,22 @@ export default function HeroSection() {
           backImage={personal.avatar}
           imageFit="cover"
           lanyardWidth={1}
+        />
+      </div>
+
+      <div className="mobile-hero-card" aria-label="Profile preview">
+        <TiltedCard
+          imageSrc={personal.avatar}
+          altText={`${personal.name} profile`}
+          captionText={personal.name}
+          containerHeight="290px"
+          containerWidth="250px"
+          imageHeight="260px"
+          imageWidth="220px"
+          scaleOnHover={1.08}
+          rotateAmplitude={10}
+          showMobileWarning={false}
+          showTooltip={false}
         />
       </div>
 
@@ -341,6 +358,16 @@ export default function HeroSection() {
           background: transparent !important;
         }
 
+        .mobile-hero-card {
+          position: absolute;
+          top: 16vh;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 15;
+          display: none;
+          pointer-events: none;
+        }
+
         .hero-content-wrap {
           position: relative;
           z-index: 20;
@@ -491,6 +518,16 @@ export default function HeroSection() {
           .hero-lanyard-stage {
             width: 100%;
             height: 100vh;
+          }
+
+          .hero-lanyard-stage {
+            display: none;
+          }
+
+          .mobile-hero-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
 
           .hero-content-wrap {
