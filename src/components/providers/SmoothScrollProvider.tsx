@@ -10,6 +10,10 @@ export default function SmoothScrollProvider({
 }) {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    
+    // Disable smooth scroll on mobile and tablet devices for better performance
+    const isMobile = window.matchMedia('(max-width: 1024px) and (pointer: coarse)').matches
+    if (isMobile) return
 
     const lenis = new Lenis({
       duration: 1.2,

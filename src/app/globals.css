@@ -121,4 +121,28 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
   }
+
+  /* Mobile optimization - reduce animations on touch devices for performance */
+  @media (pointer: coarse) and (max-width: 1024px) {
+    .animate-float,
+    .animate-pulse-dot,
+    .animate-float-card {
+      animation: none;
+    }
+    
+    .marquee-track,
+    .marquee-reverse,
+    .skill-ribbon {
+      animation: none;
+    }
+
+    * {
+      animation-duration: 0.3s !important;
+    }
+
+    /* Disable expensive transitions on mobile */
+    * {
+      transition-duration: 0.15s !important;
+    }
+  }
 }

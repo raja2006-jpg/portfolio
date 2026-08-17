@@ -114,6 +114,9 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
   }, [getCenterOfElement]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    // Disable pointer tracking on mobile for better performance
+    if (window.matchMedia('(pointer: coarse)').matches) return
+    
     const card = cardRef.current;
     if (!card) return;
 

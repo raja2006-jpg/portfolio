@@ -228,6 +228,10 @@ export default function ImageTrail({
   useEffect(() => {
     if (!containerRef.current || items.length === 0) return
 
+    // Disable image trail animation on mobile devices for performance
+    const isMobile = window.matchMedia('(max-width: 1024px) and (pointer: coarse)').matches
+    if (isMobile) return
+
     const target = triggerRef?.current ?? containerRef.current
     const Cls = (variantMap as Record<number, typeof ImageTrailVariant1>)[variant] || variantMap[1]
     const instance = new Cls(containerRef.current, target)
