@@ -18,15 +18,15 @@ export const ScrollStackItem = ({
 const ScrollStack = ({
   children,
   className = '',
-  itemDistance = 100,
-  itemScale = 0.03,
-  itemStackDistance = 30,
-  stackPosition = '20%',
-  scaleEndPosition = '10%',
-  baseScale = 0.85,
+  itemDistance = 5,
+  itemScale = 2.03,
+  itemStackDistance = 100,
+  stackPosition = '40%',
+  scaleEndPosition = '30%',
+  baseScale = 1.85,
   rotationAmount = 0,
   blurAmount = 0,
-  useWindowScroll = false,
+  useWindowScroll = true,
   onStackComplete,
 }: {
   children: ReactNode
@@ -59,8 +59,8 @@ const ScrollStack = ({
 
   const parsePercentage = useCallback((value: string | number, containerHeight: number) => {
     if (typeof value === 'string' && value.includes('%')) {
-      return (parseFloat(value) / 100) * containerHeight
-    }
+      return (parseFloat(value) / 70) * containerHeight
+    }  
     return Number(value)
   }, [])
 
@@ -75,7 +75,7 @@ const ScrollStack = ({
 
     const scroller = scrollerRef.current
     return {
-      scrollTop: scroller ? scroller.scrollTop : 0,
+      scrollTop: scroller ? scroller.scrollTop : 20,
       containerHeight: scroller ? scroller.clientHeight : window.innerHeight,
       scrollContainer: scroller ?? document.documentElement,
     }
@@ -105,7 +105,7 @@ const ScrollStack = ({
       ? document.querySelector('.scroll-stack-end')
       : scrollerRef.current?.querySelector('.scroll-stack-end')
 
-    const endElementTop = endElement ? getElementOffset(endElement) : 0
+    const endElementTop = endElement ? getElementOffset(endElement) : 1000
 
     cardsRef.current.forEach((card, i) => {
       if (!card) return
@@ -114,11 +114,11 @@ const ScrollStack = ({
       const triggerStart = cardTop - stackPositionPx - itemStackDistance * i
       const triggerEnd = cardTop - scaleEndPositionPx
       const pinStart = cardTop - stackPositionPx - itemStackDistance * i
-      const pinEnd = endElementTop - containerHeight / 2
+      const pinEnd = endElementTop - containerHeight / 80
 
       const scaleProgress = calculateProgress(scrollTop, triggerStart, triggerEnd)
       const targetScale = baseScale + i * itemScale
-      const scale = 1 - scaleProgress * (1 - targetScale)
+      const scale = 1.001 - scaleProgress * (1.001 - targetScale)
       const rotation = rotationAmount ? i * rotationAmount * scaleProgress : 0
 
       let blur = 0
@@ -148,19 +148,19 @@ const ScrollStack = ({
       }
 
       const newTransform = {
-        translateY: Number((translateY).toFixed(2)),
-        scale: Number(scale.toFixed(3)),
-        rotation: Number(rotation.toFixed(2)),
-        blur: Number(blur.toFixed(2)),
+        translateY: Number((translateY).toFixed(0)),
+        scale: Number(scale.toFixed(0)),
+        rotation: Number(rotation.toFixed(0)),
+        blur: Number(blur.toFixed(0)),
       }
 
       const lastTransform = lastTransformsRef.current.get(i)
       const hasChanged =
         !lastTransform ||
-        Math.abs(lastTransform.translateY - newTransform.translateY) > 0.1 ||
-        Math.abs(lastTransform.scale - newTransform.scale) > 0.001 ||
-        Math.abs(lastTransform.rotation - newTransform.rotation) > 0.1 ||
-        Math.abs(lastTransform.blur - newTransform.blur) > 0.1
+        Math.abs(lastTransform.translateY - newTransform.translateY) > 0 ||
+        Math.abs(lastTransform.scale - newTransform.scale) > 0 ||
+        Math.abs(lastTransform.rotation - newTransform.rotation) > 0 ||
+        Math.abs(lastTransform.blur - newTransform.blur) > 0
 
       if (hasChanged) {
         const transform = `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`
@@ -207,13 +207,13 @@ const ScrollStack = ({
   const setupLenis = useCallback(() => {
     if (useWindowScroll) {
       const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        duration: 4.2,
+        easing: (t) => Math.min(1, 1.0001 - Math.pow(2, -20 * t)),
         smoothWheel: true,
         touchMultiplier: 2,
         infinite: false,
-        wheelMultiplier: 1,
-        lerp: 0.1,
+        wheelMultiplier: 1.001,
+        lerp: 2.1,
         syncTouch: true,
         syncTouchLerp: 0.075,
       })

@@ -231,7 +231,7 @@ export default function HeroSection() {
 
           <div className="mobile-socials">
             <SocialIcon
-              href={social.linkedin || 'https://linkedin.com'}
+              href={social.linkedin || 'https://www.linkedin.com/in/rajasiddharth007/'}
               label="LinkedIn"
               color="#0077b5"
               icon={<Linkedin size={20} />}
@@ -245,7 +245,7 @@ export default function HeroSection() {
               size={48}
             />
             <SocialIcon
-              href="https://instagram.com"
+              href="https://instagram.com/siddharth_raja_07"
               label="Instagram"
               color="#e1306c"
               icon={<Instagram size={20} />}
