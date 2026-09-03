@@ -120,11 +120,13 @@ export default function Lanyard({
           position,
           fov,
         }}
-        dpr={isMobile ? 1 : [1, 1.5]}
+        dpr={isMobile ? 1 : [1, 1.2]}
         gl={{
           alpha: transparent,
-          antialias: true,
+          antialias: !isMobile,
           powerPreference: 'high-performance',
+          depth: true,
+          stencil: false,
         }}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0)
@@ -135,7 +137,7 @@ export default function Lanyard({
         <Suspense fallback={null}>
           <Physics
             gravity={gravity}
-            timeStep={isMobile ? 1 / 30 : 1 / 60}
+            timeStep={isMobile ? 1 / 20 : 1 / 55}
           >
             <Band
               isMobile={isMobile}
@@ -269,7 +271,7 @@ function Band({
     const result = new THREE.CanvasTexture(canvas)
     result.colorSpace = THREE.SRGBColorSpace
     result.flipY = baseMap.flipY
-    result.anisotropy = 8
+    result.anisotropy = isMobile ? 2 : 4
     result.needsUpdate = true
 
     return result
@@ -357,9 +359,9 @@ function Band({
     curve.points[2].copy(j1.current.lerped)
     curve.points[3].copy(fixed.current.translation())
 
-    ;(band.current.geometry as any).setPoints(
-      curve.getPoints(isMobile ? 16 : 32),
-    )
+      ; (band.current.geometry as any).setPoints(
+        curve.getPoints(isMobile ? 16 : 32),
+      )
 
     ang.copy(card.current.angvel())
     rot.copy(card.current.rotation())
@@ -484,7 +486,7 @@ function Band({
         <meshLineGeometry />
         <meshLineMaterial
           args={[{
-              resolution: new Vector2
+            resolution: new Vector2
           }]}
           color="white"
           depthTest={false}

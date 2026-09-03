@@ -79,7 +79,8 @@ class ImageTrailVariant1 {
     this.zIndexVal = 1
     this.activeImagesCount = 0
     this.isIdle = true
-    this.threshold = 80
+    this.threshold = 100
+    this.lastMoveTime = performance.now()
 
     this.mousePos = { x: 0, y: 0 }
     this.lastMousePos = { x: 0, y: 0 }
@@ -88,6 +89,11 @@ class ImageTrailVariant1 {
     const handlePointerMove = (ev: MouseEvent | TouchEvent) => {
       const rect = this.container.getBoundingClientRect()
       this.mousePos = getLocalPointerPos(ev, rect)
+      this.lastMoveTime = performance.now()
+      // Restart RAF if it was stopped due to idle
+      if (this.rafId === null && !this.destroyed) {
+        this.rafId = requestAnimationFrame(() => this.render())
+      }
     }
     pointerTarget.addEventListener('mousemove', handlePointerMove)
     pointerTarget.addEventListener('touchmove', handlePointerMove)
@@ -123,6 +129,7 @@ class ImageTrailVariant1 {
   cacheMousePos: { x: number; y: number }
   handlePointerMove: (ev: MouseEvent | TouchEvent) => void
   initRender: (ev: MouseEvent | TouchEvent) => void
+  lastMoveTime: number
 
   render() {
     if (this.destroyed) return
@@ -134,10 +141,19 @@ class ImageTrailVariant1 {
     if (distance > this.threshold) {
       this.showNextImage()
       this.lastMousePos = { ...this.mousePos }
+      this.lastMoveTime = performance.now()
     }
     if (this.isIdle && this.zIndexVal !== 1) {
       this.zIndexVal = 1
     }
+
+    // Stop RAF when idle for 2s and no active images — restart on next pointer move
+    const idleMs = performance.now() - this.lastMoveTime
+    if (this.isIdle && idleMs > 2000) {
+      this.rafId = null
+      return
+    }
+
     this.rafId = requestAnimationFrame(() => this.render())
   }
 

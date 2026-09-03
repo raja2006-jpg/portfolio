@@ -7,14 +7,18 @@
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
+  -webkit-transform: translateZ(0);
   transform: translateZ(0);
   will-change: scroll-position;
 }
 
 .scroll-stack-inner {
-  padding: 1rem 0 3rem;
+  padding: 20vh 5rem 50rem;
   min-height: 100vh;
-  width: 100%;
+}
+
+.scroll-stack-card-wrapper {
+  position: relative;
 }
 
 .scroll-stack-card {
@@ -22,23 +26,16 @@
   will-change: transform, filter;
   backface-visibility: hidden;
   transform-style: preserve-3d;
-  box-shadow: 0 20px 45px rgba(21, 45, 38, 0.06);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  height: 20rem;
   width: 100%;
   margin: 30px 0;
-  padding: 1.25rem;
-  border-radius: 1.75rem;
+  padding: 3rem;
+  border-radius: 40px;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  position: relative;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
-}
-
-.education-stack-item {
-  min-height: auto;
+  position: relative;
 }
 
 .scroll-stack-end {
@@ -46,21 +43,26 @@
   height: 1px;
 }
 
-/* Mobile responsive adjustments */
+.education-stack-item {
+  min-height: auto;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 1.6rem;
+  box-shadow: 0 18px 45px rgba(21, 45, 38, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
 @media (max-width: 768px) {
   .scroll-stack-inner {
-    padding: 0 1rem 2rem;
+    padding: 15vh 0.75rem 16rem;
   }
 
   .scroll-stack-card {
-    margin: 20px 0;
-    padding: 1rem;
+    height: auto;
+    min-height: 18rem;
+    padding: 1.25rem;
     border-radius: 1.5rem;
-  }
-}
-
-@media (min-width: 769px) {
-  .scroll-stack-scroller {
-    display: none;
+    margin: 20px 0;
   }
 }

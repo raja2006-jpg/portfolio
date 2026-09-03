@@ -53,26 +53,19 @@ function GlowBlob({
   delay?: number
 }) {
   return (
-    <motion.div
+    <div
       aria-hidden="true"
-      animate={{
-        scale: [1, 1.15, 1],
-        opacity: [0.55, 0.85, 0.55],
-      }}
-      transition={{
-        duration: 8 + delay,
-        repeat: Infinity,
-        ease: 'easeInOut',
-        delay,
-      }}
       style={{
         position: 'absolute',
         width: size,
         height: size,
         borderRadius: '50%',
         background: color,
-        filter: `blur(${Math.round(size * 0.5)}px)`,
+        filter: `blur(${Math.round(size * 0.4)}px)`,
         pointerEvents: 'none',
+        animation: `glowPulse ${8 + delay}s ease-in-out infinite`,
+        animationDelay: `${delay}s`,
+        willChange: 'transform, opacity',
         ...style,
       }}
     />

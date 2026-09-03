@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -8,7 +8,9 @@
 }
 
 @layer base {
-  * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+  }
 
   html {
     scroll-behavior: smooth;
@@ -30,9 +32,22 @@
     font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   }
 
-  ::selection { background: #4caf50; color: white; }
-  a, button, input, textarea { -webkit-tap-highlight-color: transparent; }
-  :focus-visible { outline: 2px solid #4caf50; outline-offset: 4px; }
+  ::selection {
+    background: #4caf50;
+    color: white;
+  }
+
+  a,
+  button,
+  input,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid #4caf50;
+    outline-offset: 4px;
+  }
 }
 
 @layer utilities {
@@ -87,11 +102,28 @@
     text-transform: uppercase;
   }
 
-  .marquee-track { width: max-content; animation: marquee 24s linear infinite; }
-  .marquee-reverse { width: max-content; animation: marquee-reverse 27s linear infinite; }
-  .skill-ribbon { animation: ribbon 14s linear infinite; }
+  .marquee-track {
+    width: max-content;
+    animation: marquee 24s linear infinite;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
 
-  .custom-cursor-dot, .custom-cursor-ring {
+  .marquee-reverse {
+    width: max-content;
+    animation: marquee-reverse 27s linear infinite;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .skill-ribbon {
+    animation: ribbon 14s linear infinite;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .custom-cursor-dot,
+  .custom-cursor-ring {
     position: fixed;
     top: 0;
     left: 0;
@@ -99,50 +131,156 @@
     z-index: 1000;
     will-change: transform;
   }
-  .custom-cursor-dot { width: 6px; height: 6px; border-radius: 50%; background: #388e3c; }
-  .custom-cursor-ring { width: 34px; height: 34px; border: 1px solid rgb(76 175 80 / .55); border-radius: 999px; transition: width .2s, height .2s, border-color .2s; }
 
-  @keyframes marquee { to { transform: translateX(-50%); } }
-  @keyframes marquee-reverse { from { transform: translateX(-50%); } to { transform: translateX(0); } }
-  @keyframes ribbon { to { transform: translateX(-50%); } }
-  @keyframes float { 50% { transform: translateY(-10px); } }
-  @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.75); } }
-  @keyframes float-card { 0%, 100% { transform: translateY(0px) rotate(var(--r, 0deg)); } 50% { transform: translateY(-8px) rotate(var(--r, 0deg)); } }
-  @keyframes hero-shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+  .custom-cursor-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #388e3c;
+  }
 
-  .animate-float { animation: float 5s ease-in-out infinite; }
-  .animate-pulse-dot { animation: pulse-dot 1.8s ease-in-out infinite; }
-  .animate-float-card { animation: float-card 3s ease-in-out infinite; }
+  .custom-cursor-ring {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgb(76 175 80 / .55);
+    border-radius: 999px;
+    transition: width .2s, height .2s, border-color .2s;
+  }
+
+  @keyframes ribbon {
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @keyframes marquee-reverse {
+    from {
+      transform: translate3d(-50%, 0, 0);
+    }
+
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes glowPulse {
+
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+
+    50% {
+      transform: scale(1.12);
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes float {
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes pulse-dot {
+
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: .35;
+      transform: scale(.75);
+    }
+  }
+
+  @keyframes float-card {
+
+    0%,
+    100% {
+      transform: translateY(0px) rotate(var(--r, 0deg));
+    }
+
+    50% {
+      transform: translateY(-8px) rotate(var(--r, 0deg));
+    }
+  }
+
+  @keyframes hero-shimmer {
+    0% {
+      background-position: -200% center;
+    }
+
+    100% {
+      background-position: 200% center;
+    }
+  }
+
+  .animate-float {
+    animation: float 5s ease-in-out infinite;
+  }
+
+  .animate-pulse-dot {
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+
+  .animate-float-card {
+    animation: float-card 3s ease-in-out infinite;
+  }
 
   @media (pointer: fine) {
-    .cursor-enhanced, .cursor-enhanced a, .cursor-enhanced button { cursor: none; }
+
+    .cursor-enhanced,
+    .cursor-enhanced a,
+    .cursor-enhanced button {
+      cursor: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: .01ms !important;
+    }
   }
 
-  /* Mobile optimization - reduce animations on touch devices for performance */
-  @media (pointer: coarse) and (max-width: 1024px) {
-    .animate-float,
-    .animate-pulse-dot,
-    .animate-float-card {
-      animation: none;
-    }
-    
-    .marquee-track,
-    .marquee-reverse,
-    .skill-ribbon {
-      animation: none;
-    }
+  /* Only hide the custom cursor on touch/mobile devices — keep ALL animations intact */
+  @media (pointer: coarse) {
 
-    * {
-      animation-duration: 0.3s !important;
+    .custom-cursor-dot,
+    .custom-cursor-ring {
+      display: none !important;
     }
+  }
 
-    /* Disable expensive transitions on mobile */
-    * {
-      transition-duration: 0.15s !important;
-    }
+  /* ─── Performance: content-visibility for below-fold sections ─── */
+  /* Browser skips rendering off-screen sections entirely            */
+  #projects,
+  #education,
+  #about,
+  #contact {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 600px;
+  }
+
+  /* Contain paint/layout to large decorative blurred glow elements  */
+  /* so their blur filter doesn't repaint the entire page             */
+  .hero-ambient,
+  .hero-vignette {
+    contain: strict;
   }
 }
